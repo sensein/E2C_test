@@ -44,21 +44,19 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - name: Set environment variables
-        run: |
-          export POETRY_CACHE_DIR=/dev/shm/poetry_cache
-          export POETRY_VIRTUALENVS_PATH=/dev/shm/virtualenvs
       - name: Install Poetry
         uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: false
-          virtualenvs-path: ${{ env.POETRY_VIRTUALENVS_PATH }}  # let's make this a variable!!
-          installer-parallel: true
       - name: Check space
         run: |
           echo "available space: "
           df -h
+      - name: Print Poetry cache folder
+        run: |
+          poetry cache dir
+      - name: Change Poetry cache folder
+        run: |
+          export POETRY_CACHE_DIR=/dev/shm/
+          echo "Poetry cache folder changed to: $POETRY_CACHE_DIR"
       - name: Check poetry version
         run: |
           poetry env info
