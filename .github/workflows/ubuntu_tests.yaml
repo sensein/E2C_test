@@ -53,32 +53,23 @@ jobs:
         run: |
           python --version
           which python
-      - name: Check if Poetry is installed
-        id: check-poetry
-        run: |
-          if command -v poetry &> /dev/null; then
-            echo "::set-output name=poetry_installed::true"
-          else
-            echo "::set-output name=poetry_installed::false"
-          fi
       - name: Install Poetry
-        if: steps.check-poetry.outputs.poetry_installed == 'false'
         uses: snok/install-poetry@v1
         with:
-          poetry-version: latest
+          poetry-version: 1.7.1
       - name: Check space
         run: |
           echo "available space: "
           df -h
+      - name: Install dependencies with Poetry
+        run: |
+          poetry env use ${{ matrix.python-version }}
+          poetry install --no-interaction --no-root
+        shell: bash
       - name: Check poetry version
         run: |
           poetry env info
           poetry --version
-      - name: Install dependencies with Poetry
-        run: |
-          poetry env use ${{ matrix.python-version }}
-          poetry install
-        shell: bash
       - name: Display NVIDIA SMI details
         run: |
           poetry run nvidia-smi
