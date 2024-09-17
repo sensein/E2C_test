@@ -31,13 +31,14 @@ jobs:
           ec2-instance-type: ${{ vars.AWS_INSTANCE_TYPE }}
           subnet-id: ${{ vars.AWS_SUBNET }}
           security-group-id: ${{ vars.AWS_SECURITY_GROUP }}
-          runner-home-dir: /dev/shm
 
   do-the-job:
     name: Run GPU Tests on the runner
     needs: start-runner
     runs-on: ${{ needs.start-runner.outputs.label }}
     steps:
+      - name: print workspace
+        run: echo "${{ github.workspace }}"
       - uses: actions/checkout@v4
         with: 
           fetch-depth: 1
