@@ -60,6 +60,11 @@ jobs:
       - name: Install Poetry
         run: pipx install poetry
         shell: bash
+      - name: Add Poetry to PATH
+        run: |
+          export PATH=$PATH:/root/.local/bin
+          echo "Poetry is installed at: $(which poetry)"
+        shell: bash
       - name: Install dependencies with Poetry
         run: |
           poetry install
