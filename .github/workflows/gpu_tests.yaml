@@ -37,8 +37,6 @@ jobs:
     needs: start-runner
     runs-on: ${{ needs.start-runner.outputs.label }}
     steps:
-      - name: print workspace
-        run: echo "${{ github.workspace }}"
       - uses: actions/checkout@v4
         with: 
           fetch-depth: 1
@@ -48,13 +46,6 @@ jobs:
           python-version: '3.10'
       - name: Install Poetry
         uses: snok/install-poetry@v1
-        with:
-          virtualenvs-path: /dev/shm/poetry-venvs  # This will store the virtualenvs in /dev/shm
-      - name: Move Poetry to /dev/shm and create symbolic link
-        run: |
-          ls /.local/
-          mv /.local/bin/poetry /dev/shm/poetry
-          ln -s /dev/shm/poetry /.local/bin/poetry
       - name: Check space
         run: |
           echo "available space: "
