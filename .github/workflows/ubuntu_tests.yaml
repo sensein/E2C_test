@@ -1,14 +1,17 @@
 name: ubuntu Tests
 
 on:
-  workflow_run:
-    workflows: ["macOS Tests"]
-    types:
-      - completed
+  pull_request:
+
+# on:
+#  workflow_run:
+#    workflows: ["macOS Tests"]
+#    types:
+#      - completed
 
 jobs:
   start-runner:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} # Trigger only if macOS tests succeed
+    # if: ${{ github.event.workflow_run.conclusion == 'success' }} # Trigger only if macOS tests succeed
     name: Start self-hosted EC2 runner for GPU
     runs-on: ubuntu-latest
     outputs:
