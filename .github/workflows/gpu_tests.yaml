@@ -52,9 +52,9 @@ jobs:
           virtualenvs-path: /dev/shm/poetry-venvs  # This will store the virtualenvs in /dev/shm
       - name: Move Poetry to /dev/shm and create symbolic link
         run: |
-          ls ~/.local/
-          mv ~/.local/bin/poetry /dev/shm/poetry
-          ln -s /dev/shm/poetry ~/.local/bin/poetry
+          ls /.local/
+          mv /.local/bin/poetry /dev/shm/poetry
+          ln -s /dev/shm/poetry /.local/bin/poetry
       - name: Check space
         run: |
           echo "available space: "
