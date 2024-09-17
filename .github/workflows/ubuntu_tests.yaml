@@ -40,7 +40,7 @@ jobs:
       matrix:
         python-version: ['3.10', '3.11']
     env:
-      POETRY_CACHE_DIR: /dev/shm  # TODO: make this as a github variable!
+      POETRY_CACHE_DIR: /opt/dlami/nvme # /dev/shm  # TODO: make this as a github variable!
     steps:
       - uses: actions/checkout@v4
         with: 
@@ -56,7 +56,7 @@ jobs:
       - name: Install Poetry
         uses: snok/install-poetry@v1
         with:
-          poetry-version: 1.7.1
+          version: 1.7.1
       - name: Check space
         run: |
           echo "available space: "
