@@ -36,6 +36,8 @@ jobs:
     name: Run GPU Tests on the runner
     needs: start-runner # required to start the main job when the runner is ready
     runs-on: ${{ needs.start-runner.outputs.label }} # run the job on the newly created runner
+    env:
+      PIP_ROOT_USER_ACTION: ignore
     steps:
       - name: Hello World
         run: echo 'Hello World!'
@@ -46,23 +48,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - name: Create and activate virtual environment
-        run: |
-          python -m venv .venv
-          source .venv/bin/activate
-        shell: bash
       - name: Upgrade pip and install pipx
         run: |
           python -m pip install --upgrade pip
           python -m pip install --upgrade pipx
           pipx ensurepath
+          export PATH=$PATH:/root/.local/bin
         shell: bash
       - name: Install Poetry
-        run: pipx install poetry
-        shell: bash
-      - name: Add Poetry to PATH
         run: |
-          export PATH=$PATH:/root/.local/bin
+          pipx install poetry
           echo "Poetry is installed at: $(which poetry)"
         shell: bash
       - name: Install dependencies with Poetry
