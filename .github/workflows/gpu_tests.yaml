@@ -46,23 +46,22 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - name: Upgrade pip and install pipx
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+      - name: Install Poetry (official method)
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install --upgrade pipx
-          python -m pipx ensurepath
+          curl -sSL https://install.python-poetry.org | python3 -
         shell: bash
-      - name: Install Poetry
+      - name: Add Poetry to PATH
         run: |
-          python -m pipx install poetry
-          python -m pipx ensurepath
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
         shell: bash
       - name: Install dependencies with Poetry
         run: |
-          python -m poetry install
+          poetry install
         shell: bash
       - name: Run unit tests
-        run: python -m poetry run pytest
+        run: poetry run pytest
         shell: bash
 
   stop-runner:
