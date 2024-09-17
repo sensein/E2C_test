@@ -53,8 +53,19 @@ jobs:
         run: |
           python --version
           which python
+      - name: Check if Poetry is installed
+        id: check-poetry
+        run: |
+          if command -v poetry &> /dev/null; then
+            echo "::set-output name=poetry_installed::true"
+          else
+            echo "::set-output name=poetry_installed::false"
+          fi
       - name: Install Poetry
+        if: steps.check-poetry.outputs.poetry_installed == 'false'
         uses: snok/install-poetry@v1
+        with:
+          poetry-version: latest
       - name: Check space
         run: |
           echo "available space: "
