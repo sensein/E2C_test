@@ -27,8 +27,17 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
+      - name: Install pipx and ensure it's up to date
         run: |
-          pip install pytest torch
+          python -m pip install --upgrade pipx
+          pipx ensurepath
+        shell: bash
+      - name: Install poetry
+        run: pipx install poetry
+        shell: bash
+      - name: Install dependencies with Poetry
+        run: |
+          poetry run pip install pytest torch
+        shell: bash
       - name: Run unit tests
-        run: pytest
+        run: poetry run pytest
