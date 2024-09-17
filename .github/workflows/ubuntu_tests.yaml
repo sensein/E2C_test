@@ -65,6 +65,7 @@ jobs:
           poetry --version
       - name: Install dependencies with Poetry
         run: |
+          poetry env use ${{ matrix.python-version }}
           poetry install
         shell: bash
       - name: Display NVIDIA SMI details
