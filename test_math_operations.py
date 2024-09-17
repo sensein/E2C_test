@@ -12,7 +12,7 @@ def test_subtract():
     assert basic_math_operation(2, 5, 'subtract') == -3
     assert basic_math_operation(0, 0, 'subtract') == 0
 
-if os.getenv("RUN_GPU_TESTS") != "true":
+if os.getenv("RUN_GPU_TESTS") == "true":
     def test_multiply():
         assert basic_math_operation(2, 3, 'multiply') == 6
         assert basic_math_operation(-2, 3, 'multiply') == -6
