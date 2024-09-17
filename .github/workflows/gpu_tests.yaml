@@ -65,7 +65,7 @@ jobs:
           poetry run nvidia-smi
           poetry run nvidia-smi -L
           poetry run nvidia-smi -q -d Memory
-          echo "DONE!"
+          echo "DONE!!!"
       - name: Run unit tests
         run: poetry run pytest
         shell: bash
