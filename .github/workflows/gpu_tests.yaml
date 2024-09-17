@@ -48,6 +48,7 @@ jobs:
         uses: snok/install-poetry@v1
       - name: Check space
         run: |
+          echo "available space: "
           df -h
       - name: Check poetry version
         run: |
