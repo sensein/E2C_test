@@ -1,13 +1,13 @@
 name: macOS Tests
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types: [ labeled ]
 
 jobs:
-  do-the-job:
-    name: Do the job on the cpu
+  macos-tests:
+    if: ${{ github.event.pull_request.labels.*.name == 'release' }}
+    name: macOS Tests
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true

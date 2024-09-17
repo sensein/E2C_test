@@ -32,7 +32,7 @@ jobs:
           subnet-id: ${{ vars.AWS_SUBNET }}
           security-group-id: ${{ vars.AWS_SECURITY_GROUP }}
 
-  do-the-job:
+  ubuntu-tests:
     name: Run GPU Tests on the runner
     needs: start-runner
     runs-on: ${{ needs.start-runner.outputs.label }}
@@ -40,7 +40,7 @@ jobs:
       matrix:
         python-version: ['3.10', '3.11']
     env:
-      POETRY_CACHE_DIR: /opt/dlami/nvme # /dev/shm  # TODO: make this as a github variable!
+      POETRY_CACHE_DIR: ${{ vars.POETRY_CACHE_DIR }}
     steps:
       - uses: actions/checkout@v4
         with: 
@@ -87,7 +87,7 @@ jobs:
     name: Stop self-hosted EC2 runner
     needs:
       - start-runner # waits for the EC2 instance to be created
-      - do-the-job # waits for the actual job to finish
+      - ubuntu-tests # waits for the actual job to finish
     runs-on: ubuntu-latest
     if: ${{ always() }} # required to stop the runner even if an error occurred in previous jobs
     steps:
