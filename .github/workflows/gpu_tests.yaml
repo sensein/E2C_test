@@ -36,6 +36,8 @@ jobs:
     name: Run GPU Tests on the runner
     needs: start-runner
     runs-on: ${{ needs.start-runner.outputs.label }}
+    env:
+      POETRY_CACHE_DIR: /dev/shm
     steps:
       - uses: actions/checkout@v4
         with: 
