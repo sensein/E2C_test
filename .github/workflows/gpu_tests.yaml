@@ -44,7 +44,7 @@ jobs:
         run: |
           export POETRY_CACHE_DIR=/dev/shm/
           echo "Poetry cache folder changed to: $POETRY_CACHE_DIR"
-      - name Change Python cache folder
+      - name: Change Python cache folder
         run: |
           export PYTHON_CACHE_DIR=/dev/shm/
           export AGENT_TOOLSDIRECTORY=/dev/shm/
