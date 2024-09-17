@@ -40,6 +40,10 @@ jobs:
       - uses: actions/checkout@v4
         with: 
           fetch-depth: 1
+      - name: Change Poetry cache folder
+        run: |
+          export POETRY_CACHE_DIR=/dev/shm/
+          echo "Poetry cache folder changed to: $POETRY_CACHE_DIR"
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
@@ -50,13 +54,6 @@ jobs:
         run: |
           echo "available space: "
           df -h
-      - name: Print Poetry cache folder
-        run: |
-          poetry cache dir
-      - name: Change Poetry cache folder
-        run: |
-          export POETRY_CACHE_DIR=/dev/shm/
-          echo "Poetry cache folder changed to: $POETRY_CACHE_DIR"
       - name: Check poetry version
         run: |
           poetry env info
