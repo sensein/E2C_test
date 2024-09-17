@@ -44,6 +44,12 @@ jobs:
         run: |
           export POETRY_CACHE_DIR=/dev/shm/
           echo "Poetry cache folder changed to: $POETRY_CACHE_DIR"
+      - name Change Python cache folder
+        run: |
+          export PYTHON_CACHE_DIR=/dev/shm/
+          export AGENT_TOOLSDIRECTORY=/dev/shm/
+          echo "Python cache folder changed to: $PYTHON_CACHE_DIR"
+          echo "Agent Tools folder changed to: $AGENT_TOOLSDIRECTORY"
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
