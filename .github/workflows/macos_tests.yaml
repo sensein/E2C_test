@@ -34,3 +34,4 @@ jobs:
         shell: bash
       - name: Run unit tests
         run: poetry run pytest
+
