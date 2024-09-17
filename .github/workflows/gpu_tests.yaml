@@ -42,11 +42,6 @@ jobs:
       - uses: actions/checkout@v4
         with: 
           fetch-depth: 1
-      - name: Display NVIDIA SMI details
-        run: |
-          nvidia-smi
-          nvidia-smi -L
-          nvidia-smi -q -d Memory
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
@@ -65,6 +60,11 @@ jobs:
         run: |
           poetry install
         shell: bash
+      - name: Display NVIDIA SMI details
+        run: |
+          poetry run nvidia-smi
+          poetry run nvidia-smi -L
+          poetry run nvidia-smi -q -d Memory
       - name: Run unit tests
         run: poetry run pytest
         shell: bash
