@@ -76,6 +76,10 @@ jobs:
       - name: Run unit tests
         run: poetry run pytest
         shell: bash
+      - name: Delete poetry env with python {{ matrix.python-version }}
+        run: |
+          poetry env remove ${{ matrix.python-version }}
+        shell: bash
 
   stop-runner:
     name: Stop self-hosted EC2 runner
