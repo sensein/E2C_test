@@ -2,11 +2,10 @@ name: macOS Tests
 
 on:
   pull_request:
-    types: [ labeled ]
 
 jobs:
   macos-tests:
-    if: ${{ github.event.pull_request.labels.*.name == 'release' }}
+    if: contains(github.event.pull_request.labels.*.name, 'release')
     name: macOS Tests
     runs-on: ${{ matrix.os }}
     strategy:
@@ -34,4 +33,3 @@ jobs:
         shell: bash
       - name: Run unit tests
         run: poetry run pytest
-
