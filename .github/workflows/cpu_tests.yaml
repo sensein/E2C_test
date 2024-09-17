@@ -37,7 +37,7 @@ jobs:
         shell: bash
       - name: Install dependencies with Poetry
         run: |
-          poetry run pip install pytest torch
+          poetry install
         shell: bash
       - name: Run unit tests
         run: poetry run pytest
