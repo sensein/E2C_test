@@ -1,14 +1,14 @@
-name: GPU Tests
+name: ubuntu Tests
 
 on:
   workflow_run:
-    workflows: ["CPU Tests"]  # Replace with the exact name of the CPU tests workflow
+    workflows: ["macOS Tests"]
     types:
       - completed
 
 jobs:
   start-runner:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} # Trigger only if CPU tests succeed
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # Trigger only if macOS tests succeed
     name: Start self-hosted EC2 runner for GPU
     runs-on: ubuntu-latest
     outputs:
@@ -40,7 +40,7 @@ jobs:
       matrix:
         python-version: ['3.10', '3.11']
     env:
-      POETRY_CACHE_DIR: /dev/shm
+      POETRY_CACHE_DIR: /dev/shm  # TODO: make this as a github variable!
     steps:
       - uses: actions/checkout@v4
         with: 
@@ -49,6 +49,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Echo python version
+        run: python --version
       - name: Install Poetry
         uses: snok/install-poetry@v1
       - name: Check space
@@ -68,7 +70,6 @@ jobs:
           poetry run nvidia-smi
           poetry run nvidia-smi -L
           poetry run nvidia-smi -q -d Memory
-          echo "DONE!!!!"
       - name: Run unit tests
         run: poetry run pytest
         shell: bash
