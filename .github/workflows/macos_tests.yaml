@@ -1,12 +1,11 @@
-name: macOS Tests
+name: macOS-tests
 
 on:
-  pull_request:
-
+  workflow_dispatch:
+  
 jobs:
   macos-tests:
-    if: contains(github.event.pull_request.labels.*.name, 'release')
-    name: macOS Tests
+    name: macOS-tests
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
