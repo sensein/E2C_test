@@ -1,8 +1,8 @@
-name: Guide Notebooks Regression - EC2 (GPU Tests)
+name: GPU Tests
 
 on:
   workflow_run:
-    workflows: ["cpu_tests.yaml"]  # Replace with the exact name of the CPU tests workflow
+    workflows: ["CPU Tests"]  # Replace with the exact name of the CPU tests workflow
     types:
       - completed
 

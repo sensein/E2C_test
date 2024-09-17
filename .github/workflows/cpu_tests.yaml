@@ -1,4 +1,4 @@
-name: Do the job on push
+name: CPU Tests
 
 on:
   push:
