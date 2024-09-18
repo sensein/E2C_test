@@ -32,8 +32,8 @@ jobs:
           subnet-id: ${{ vars.AWS_SUBNET }}
           security-group-id: ${{ vars.AWS_SECURITY_GROUP }}
 
-  ubuntu-tests:
-    name: ubuntu-tests
+  ubuntu-tests-311:
+    name: ubuntu-tests-311
     needs: start-runner
     runs-on: ${{ needs.start-runner.outputs.label }}
     strategy:
@@ -87,7 +87,7 @@ jobs:
     name: stop-runner
     needs:
       - start-runner # waits for the EC2 instance to be created
-      - ubuntu-tests # waits for the actual job to finish
+      - ubuntu-tests-311 # waits for the actual job to finish
     runs-on: ubuntu-latest
     if: ${{ always() }} # required to stop the runner even if an error occurred in previous jobs
     steps:
