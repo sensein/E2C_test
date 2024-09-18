@@ -1,0 +1,14 @@
+name: ubuntu-tests-check
+
+on:
+  workflow_run:
+    workflows: ["ubuntu-tests-python-3.10", "ubuntu-tests-python-3.11"]
+    types:
+      - success
+
+jobs:
+  start-runner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Both workflows passed
+        run: echo "Both ubuntu-tests-python-3.10 and ubuntu-tests-python-3.11 passed successfully."
