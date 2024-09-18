@@ -1,0 +1,106 @@
+name: ubuntu-tests-python-3.10
+
+on:
+  workflow_run:
+    workflows: ["macOS-tests"]
+    types:
+      - completed
+
+jobs:
+  start-runner:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # Trigger only if macOS tests succeed
+    name: start-runner
+    runs-on: ubuntu-latest
+    outputs:
+      label: ${{ steps.start-ec2-runner.outputs.label }}
+      ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_KEY_SECRET }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Start EC2 runner
+        id: start-ec2-runner
+        uses: machulav/ec2-github-runner@v2
+        with:
+          mode: start
+          github-token: ${{ secrets.GH_TOKEN }}
+          ec2-image-id: ${{ vars.AWS_IMAGE_ID }}
+          ec2-instance-type: ${{ vars.AWS_INSTANCE_TYPE }}
+          subnet-id: ${{ vars.AWS_SUBNET }}
+          security-group-id: ${{ vars.AWS_SECURITY_GROUP }}
+
+  ubuntu-tests:
+    name: ubuntu-tests
+    needs: start-runner
+    runs-on: ${{ needs.start-runner.outputs.label }}
+    strategy:
+      matrix:
+        python-version: ['3.10']
+    env:
+      POETRY_CACHE_DIR: ${{ vars.POETRY_CACHE_DIR }}
+    steps:
+      - uses: actions/checkout@v4
+        with: 
+          fetch-depth: 1
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Echo python version
+        run: |
+          python --version
+          which python
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.7.1
+      - name: Check space
+        run: |
+          echo "available space: "
+          df -h
+      - name: Install dependencies with Poetry
+        run: |
+          poetry env use ${{ matrix.python-version }}
+          poetry install --no-interaction --no-root
+        shell: bash
+      - name: Check poetry version
+        run: |
+          poetry env info
+          poetry --version
+      - name: Display NVIDIA SMI details
+        run: |
+          poetry run nvidia-smi
+          poetry run nvidia-smi -L
+          poetry run nvidia-smi -q -d Memory
+      - name: Run unit tests
+        run: poetry run pytest
+        shell: bash
+      - name: Delete poetry env with python {{ matrix.python-version }}
+        run: |
+          poetry env remove ${{ matrix.python-version }}
+        shell: bash
+
+  stop-runner:
+    name: stop-runner
+    needs:
+      - start-runner # waits for the EC2 instance to be created
+      - ubuntu-tests # waits for the actual job to finish
+    runs-on: ubuntu-latest
+    if: ${{ always() }} # required to stop the runner even if an error occurred in previous jobs
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_KEY_SECRET }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Stop EC2 runner
+        uses: machulav/ec2-github-runner@v2
+        with:
+          mode: stop
+          github-token: ${{ secrets.GH_TOKEN }}
+          label: ${{ needs.start-runner.outputs.label }}
+          ec2-instance-id: ${{ needs.start-runner.outputs.ec2-instance-id }}
