@@ -2,15 +2,9 @@ name: macOS-tests
 
 on:
   pull_request:
-    branches:
-      - main
-    types:
-      - labeled
-  workflow_dispatch:
   
 jobs:
   macos-tests:
-    if: contains(github.event.pull_request.labels.*.name, 'release')
     name: macOS-tests
     runs-on: ${{ matrix.os }}
     strategy:
