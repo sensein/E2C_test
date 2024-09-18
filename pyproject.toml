@@ -8,8 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 torch = "^2.4.1"
-pytest = "^8.3.3"
-
+pytest-xdist = {version = "^3.6.1", extras = ["psutil"]}
 
 [build-system]
 requires = ["poetry-core"]

@@ -76,7 +76,7 @@ jobs:
           poetry run nvidia-smi -L
           poetry run nvidia-smi -q -d Memory
       - name: Run unit tests
-        run: poetry run pytest
+        run: poetry run pytest -n auto
         shell: bash
       - name: Delete poetry env with python {{ matrix.python-version }}
         run: |

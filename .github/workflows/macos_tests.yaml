@@ -31,10 +31,5 @@ jobs:
           poetry install --no-interaction --no-root
         shell: bash
       - name: Run unit tests
-        run: poetry run pytest
-      - name: Upload Test Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: ./test-results
+        run: poetry run pytest -n auto
+        shell: bash
