@@ -6,11 +6,14 @@ on:
     types:
       - completed
 
+# Define the matrix at the top level
 jobs:
   start-runner:
-    # if: ${{ github.event.workflow_run.conclusion == 'success' }} # Trigger only if macOS tests succeed
     name: start-runner
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11']  # Define matrix at the top level
     outputs:
       label: ${{ steps.start-ec2-runner.outputs.label }}
       ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
@@ -36,9 +39,6 @@ jobs:
     name: ubuntu-tests
     needs: start-runner
     runs-on: ${{ needs.start-runner.outputs.label }}
-    strategy:
-      matrix:
-        python-version: ['3.10', '3.11']
     env:
       POETRY_CACHE_DIR: ${{ vars.POETRY_CACHE_DIR }}
     steps:
@@ -78,7 +78,7 @@ jobs:
       - name: Run unit tests
         run: poetry run pytest
         shell: bash
-      - name: Delete poetry env with python {{ matrix.python-version }}
+      - name: Delete poetry env with python ${{ matrix.python-version }}
         run: |
           poetry env remove ${{ matrix.python-version }}
         shell: bash
